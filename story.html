@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Story</title>
+    <link rel="stylesheet" href="story.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+    <!-- Audio Element -->
+    <audio id="bg-audio" loop>
+        <source src="assets/song.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- Audio Placeholder -->
+    <div class="audio-control">
+        <div id="bgMusic"></div>
+        <button id="toggleMusic">Play/Pause</button>
+    </div>
+
+    <!-- Scene 1: Intro -->
+    <section id="scene-1" class="scene active">
+        <div class="content">
+            <h1>A Special Journey</h1>
+            <p>Click anywhere to begin</p>
+        </div>
+    </section>
+
+    <!-- Scene 2: Mining Mini-Game -->
+    <section id="scene-2" class="scene">
+        <div class="content">
+            <div class="instruction-box">
+                <h2 id="game-instruction" style="color: #FFD700; margin: 0;">Fill the letter with Love</h2>
+                <p id="game-subtext" style="color: #FFD700; margin: 5px 0;">Complete the tasks to find hearts</p>
+                <p class="controls-hint" style="color: #FFA500; font-size: 0.9rem; margin-top: 5px;">
+                    <strong>Controls:</strong> Left Click to Use | Right Click to Equip/Drop
+                </p>
+            </div>
+
+            <div class="interaction-area game-mode three-column">
+
+                <!-- Left: Mining Game -->
+                <div class="game-column">
+                    <div class="tools-container">
+                        <img id="tool-pickaxe" src="assets/pickaxe.png" alt="Pickaxe">
+                        <p class="tool-label" style="color: #FFD700;">Equip</p>
+                    </div>
+                    <div class="mining-zone">
+                        <div id="mining-grid"></div>
+                        <img id="draggable-heart" src="assets/heart.png" draggable="false" class="buried heart-item"
+                            alt="Heart">
+                    </div>
+                </div>
+
+                <!-- Center: Envelope -->
+                <div class="envelope-column">
+                    <div id="target-envelope">✉️</div>
+                </div>
+
+                <!-- Right: Combat Game -->
+                <div class="game-column">
+                    <div class="tools-container" id="tool-slot-sword">
+                        <img id="tool-sword" src="assets/sword.png" alt="Sword">
+                        <p class="tool-label" style="color: #FFD700;">Equip</p>
+                    </div>
+                    <div class="combat-zone">
+                        <div class="enemy-group">
+                            <img draggable="false" class="enemy zombie" src="assets/zombie.png" alt="Zombie">
+                            <img draggable="false" class="enemy skeleton" src="assets/skeleton.png" alt="Skeleton">
+                            <img draggable="false" class="enemy zombie" src="assets/zombie.png" alt="Zombie">
+                            <img draggable="false" class="enemy skeleton" src="assets/skeleton.png" alt="Skeleton">
+                        </div>
+                        <img id="draggable-heart-2" src="assets/heart.png" draggable="false" class="buried heart-item"
+                            alt="Heart">
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Scene 3: Gallery (Click progression) -->
+    <section id="scene-3" class="scene">
+        <div class="content">
+            <h2 style="color: #FFD700; text-shadow: 2px 2px 4px #000;">My Love</h2>
+            <div class="gallery-container">
+                <!-- Slide 1: Text Right -->
+                <div class="gallery-slide active-slide">
+                    <div class="img-box">
+                        <img src="assets/gallery1.jpg"
+                            style="width:100%; height:100%; object-fit:cover; border-radius:10px;">
+                    </div>
+                    <div class="text-box">
+                        <p>I was lost in shadows, wandering without direction. My world felt gray and heavy, until the
+                            moment our paths crossed.</p>
+                    </div>
+                </div>
+
+                <!-- Slide 2: Text Left -->
+                <div class="gallery-slide reverse-layout">
+                    <div class="text-box">
+                        <p>You walked in like a sunrise, bringing warmth I forgot existed. Your smile became my beacon,
+                            guiding me out of the dark.</p>
+                    </div>
+                    <div class="img-box">
+                        <img src="assets/gallery2.jpg"
+                            style="width:100%; height:100%; object-fit:cover; border-radius:10px;">
+                    </div>
+                </div>
+
+                <!-- Slide 3: Text Right -->
+                <div class="gallery-slide">
+                    <div class="img-box">
+                        <img src="assets/gallery3.jpg"
+                            style="width:100%; height:100%; object-fit:cover; border-radius:10px;">
+                    </div>
+                    <div class="text-box">
+                        <p>Now, with you, every day feels like a gift. You didn't just save me; you gave me a life worth
+                            loving.</p>
+                    </div>
+                </div>
+            </div>
+            <p class="hint" style="color: #FFD700;">(Click to see next memory)</p>
+        </div>
+    </section>
+
+    <!-- Scene 4: Final -->
+    <section id="scene-4" class="scene">
+        <div class="content">
+            <h2 style="color: #FFD700; font-size: 3rem;">And Finally...</h2>
+            <div id="countdown" style="font-size: 8rem; color: #fff; font-weight: bold; text-shadow: 0 0 20px #FFD700;">
+                5</div>
+        </div>
+    </section>
+
+    <script src="story.js"></script>
+</body>
+
+</html>

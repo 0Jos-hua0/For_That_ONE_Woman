@@ -1,0 +1,707 @@
+:root {
+    --bg-gradient: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+    --primary-color: #ff6f61;
+    /* Romantic Red/Pink */
+    --text-color: #ffffff;
+    --font-main: 'Outfit', sans-serif;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-main);
+    /* background moved to ::before for blur */
+    color: #FFD700;
+    /* Yellow text global */
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+}
+
+body::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url('assets/Sky.png') no-repeat center center/cover;
+    filter: blur(3px);
+    /* Blur background */
+    z-index: -1;
+}
+
+.scene {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    /* flex */
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 1s ease-in-out;
+    text-align: center;
+}
+
+.scene.active {
+    opacity: 1;
+    pointer-events: all;
+    z-index: 10;
+}
+
+/* Fade Out Effect */
+.fade-out-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: black;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 2s ease;
+    z-index: 9999;
+}
+
+.fade-out-overlay.active {
+    opacity: 1;
+    pointer-events: all;
+}
+
+h1 {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    font-weight: 700;
+}
+
+h2 {
+    font-size: 2rem;
+    margin-bottom: 2rem;
+}
+
+p {
+    font-size: 1.2rem;
+    opacity: 0.8;
+}
+
+/* Audio Control */
+.audio-control {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 100;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 10px;
+    border-radius: 8px;
+    backdrop-filter: blur(5px);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.audio-placeholder {
+    font-size: 0.8rem;
+    color: #ffd700;
+}
+
+button {
+    background: var(--primary-color);
+    border: none;
+    padding: 8px 15px;
+    border-radius: 20px;
+    color: white;
+    cursor: pointer;
+    font-family: inherit;
+    transition: transform 0.2s;
+}
+
+button:hover {
+    transform: scale(1.05);
+}
+
+/* Scene 2: Drag Interaction */
+.interaction-area {
+    margin-top: 3rem;
+    display: flex;
+    gap: 100px;
+    align-items: center;
+    justify-content: center;
+    min-height: 150px;
+}
+
+#draggable-heart {
+    font-size: 4rem;
+    cursor: grab;
+    transition: transform 0.2s;
+    user-select: none;
+}
+
+#draggable-heart:active {
+    cursor: grabbing;
+    transform: scale(1.2);
+}
+
+#target-envelope {
+    font-size: 4rem;
+    border: 2px dashed rgba(255, 255, 255, 0.3);
+    padding: 20px;
+    border-radius: 10px;
+    transition: all 0.3s;
+}
+
+#target-envelope.highlight {
+    border-color: var(--primary-color);
+    background: rgba(255, 111, 97, 0.1);
+    transform: scale(1.1);
+}
+
+/* Scene 3: Gallery */
+.gallery-container {
+    margin-top: 2rem;
+    position: relative;
+    width: 800px;
+    max-width: 90%;
+    height: 400px;
+}
+
+/* Ensure wide interaction area for scene 2 */
+#scene-2 .content {
+    width: 90%;
+    max-width: 1200px;
+    margin-top: -50px;
+    /* Push everything up */
+}
+
+.instruction-box {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border-radius: 15px;
+    padding: 15px 30px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    display: inline-block;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.gallery-slide {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 2rem;
+    padding: 2rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    opacity: 0;
+    transform: translateX(-100px);
+    /* Start from Left */
+    transition: all 0.8s ease;
+    pointer-events: none;
+    backdrop-filter: blur(10px);
+}
+
+.gallery-slide.reverse-layout {
+    transform: translateX(100px);
+    /* Start from Right */
+    /* flex-direction: row-reverse; Removed to keep Text Left, Image Right */
+}
+
+/* Floating Messages (Heart to Box) */
+.floating-message {
+    position: fixed;
+    width: 60px;
+    height: 60px;
+    background: url('assets/heart.png') no-repeat center center/contain;
+    pointer-events: auto;
+    /* Allow hover */
+    z-index: 20;
+    cursor: pointer;
+    transition: all 0.5s ease;
+
+    /* Text styles (Hidden initially) */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 0;
+    color: transparent;
+    border-radius: 50%;
+    /* Circle shape initially */
+    box-shadow: 0 0 15px rgba(255, 111, 97, 0.5);
+
+    animation: floatBob 3s ease-in-out infinite;
+}
+
+.floating-message:hover {
+    width: 300px;
+    height: auto;
+    min-height: 80px;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 15px;
+    padding: 15px;
+
+    font-size: 1rem;
+    color: #333;
+    font-weight: 500;
+    text-align: center;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+
+    z-index: 100;
+    /* Bring to front */
+}
+
+@keyframes floatBob {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-15px);
+    }
+}
+
+
+
+
+.gallery-slide.active-slide {
+    opacity: 1;
+    transform: translateX(0);
+    pointer-events: all;
+    z-index: 2;
+    background: rgba(255, 255, 255, 0.1);
+    /* Slight highlight */
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.img-box {
+    flex: 1;
+    height: 300px;
+    background: linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%);
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #333;
+    font-weight: bold;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.text-box {
+    flex: 1;
+    font-size: 1.3rem;
+    line-height: 1.6;
+    text-align: left;
+    color: #FFD700;
+    /* Yellow text for visibility on white/sky bg */
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+    /* Stronger shadow */
+    display: flex;
+    align-items: center;
+}
+
+.gallery-slide.reverse-layout .text-box {
+    text-align: left;
+}
+
+.hint {
+    margin-top: 1rem;
+    font-size: 0.9rem;
+    font-style: italic;
+    opacity: 0.6;
+}
+
+/* --- Mining Game Styles --- */
+
+.game-mode.three-column {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* Center vertically */
+    gap: 4rem;
+    /* Spacing between columns */
+    margin-top: 3rem;
+    width: 100%;
+    position: relative;
+    /* Anchor for absolute envelope */
+}
+
+.game-column {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+/* Mining Column (Left) */
+.game-mode.three-column .game-column:nth-child(1) {
+    flex-direction: row;
+    margin-top: -100px;
+    margin-right: 450px;
+    /* Push left away from center */
+}
+
+/* Combat Column (Right) */
+.game-mode.three-column .game-column:nth-child(3) {
+    flex-direction: row-reverse;
+    /* Sword Right, Enemies Left */
+    margin-top: -250px;
+}
+
+.envelope-column {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    top: 20%;
+    /* Adjusted visually to match game heights based on negative margins */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 5;
+}
+
+/* Tool */
+.tools-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.tools-container:hover {
+    transform: translateY(-5px);
+}
+
+.tools-container.equipped {
+    filter: drop-shadow(0 0 10px #ffd700);
+    transform: scale(1.1);
+}
+
+#tool-pickaxe {
+    width: 80px;
+    height: 80px;
+    object-fit: contain;
+}
+
+.tool-label {
+    margin-top: 5px;
+    font-size: 0.9rem;
+    color: #ffd700;
+}
+
+/* Mining Zone */
+.mining-zone {
+    position: relative;
+    width: 240px;
+    /* 3 * 80px */
+    height: 240px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#mining-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+    gap: 2px;
+}
+
+.stone-block {
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    border-radius: 4px;
+    cursor: context-menu;
+    /* Hint for right click */
+    transition: transform 0.1s, opacity 0.3s;
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.stone-block:hover {
+    filter: brightness(1.1);
+}
+
+.stone-block.broken {
+    opacity: 0;
+    pointer-events: none;
+    transform: scale(0.8);
+}
+
+/* Tool Follower (The Pickaxe acting as cursor) */
+#tool-cursor {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 80px;
+    height: 80px;
+    background-image: url('assets/pickaxe.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    pointer-events: none;
+    /* Let clicks pass through */
+    z-index: 1000;
+    transform: translate(-10%, -90%);
+    /* Adjust pivot to look like holding */
+    display: none;
+}
+
+/* Mining Animation for Tool */
+#tool-cursor.mining-action {
+    animation: mineHit 0.2s ease-in-out;
+}
+
+@keyframes mineHit {
+    0% {
+        transform: translate(-10%, -90%) rotate(0deg);
+    }
+
+    50% {
+        transform: translate(-10%, -90%) rotate(-45deg);
+    }
+
+    /* Tilt down */
+    100% {
+        transform: translate(-10%, -90%) rotate(0deg);
+    }
+}
+
+/* Heart States */
+#draggable-heart.buried {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+    transform: scale(0.5);
+    z-index: 1;
+    /* Behind grid */
+}
+
+#draggable-heart.revealed {
+    width: 60px;
+    height: 60px;
+    position: absolute;
+    opacity: 1;
+    pointer-events: all;
+    transform: scale(1);
+    z-index: 5;
+    /* On top of grid (through holes) */
+    animation: popUp 0.6s ease-out;
+}
+
+@keyframes popUp {
+    0% {
+        transform: scale(0) translateY(20px);
+    }
+
+    80% {
+        transform: scale(1.2) translateY(-10px);
+    }
+
+    100% {
+        transform: scale(1) translateY(0);
+    }
+}
+
+
+
+/* Animations */
+@keyframes shake {
+    0% {
+        transform: translate(1px, 1px) rotate(0deg);
+    }
+
+    10% {
+        transform: translate(-1px, -2px) rotate(-1deg);
+    }
+
+    20% {
+        transform: translate(-3px, 0px) rotate(1deg);
+    }
+
+    30% {
+        transform: translate(3px, 2px) rotate(0deg);
+    }
+
+    40% {
+        transform: translate(1px, -1px) rotate(1deg);
+    }
+
+    50% {
+        transform: translate(-1px, 2px) rotate(-1deg);
+    }
+
+    60% {
+        transform: translate(-3px, 1px) rotate(0deg);
+    }
+
+    70% {
+        transform: translate(3px, 1px) rotate(-1deg);
+    }
+
+    80% {
+        transform: translate(-1px, -1px) rotate(1deg);
+    }
+
+    90% {
+        transform: translate(1px, 2px) rotate(0deg);
+    }
+
+    100% {
+        transform: translate(1px, -2px) rotate(-1deg);
+    }
+}
+
+.shake-anim {
+    animation: shake 0.5s;
+    filter: brightness(1.2);
+}
+
+/* --- Combat Zone --- */
+/* --- Combat Zone --- */
+.combat-zone {
+    display: flex;
+    flex-direction: row;
+    /* Internal layout: Enemies | Heart */
+    align-items: center;
+    gap: 15px;
+    position: relative;
+    width: auto;
+}
+
+/* ... existing code ... */
+
+#tool-sword {
+    width: 90px;
+    height: 90px;
+    object-fit: contain;
+}
+
+.enemy-group {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    /* Group them close */
+    width: 160px;
+    height: 160px;
+    z-index: 2;
+}
+
+.enemy {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    cursor: context-menu;
+    transition: filter 0.2s, transform 0.1s;
+    animation: floatEnemy 3s ease-in-out infinite;
+}
+
+.enemy:nth-child(even) {
+    animation-delay: 1s;
+}
+
+@keyframes floatEnemy {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-5px);
+    }
+}
+
+.enemy:hover {
+    filter: drop-shadow(0 0 5px red);
+}
+
+.enemy.dead {
+    transform: scale(0) rotate(360deg);
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.5s ease-out;
+}
+
+
+
+/* Sword Cursor */
+#sword-cursor {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100px;
+    height: 100px;
+    background-image: url('assets/sword.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    pointer-events: none;
+    z-index: 1000;
+    transform: translate(-20%, -20%);
+    display: none;
+}
+
+#sword-cursor.slash {
+    animation: slashHit 0.2s ease-out;
+}
+
+@keyframes slashHit {
+    0% {
+        transform: translate(-20%, -20%) rotate(0deg);
+    }
+
+    50% {
+        transform: translate(10%, 10%) rotate(60deg);
+    }
+
+    100% {
+        transform: translate(-20%, -20%) rotate(0deg);
+    }
+}
+
+/* Draggable Heart 2 */
+#draggable-heart-2 {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.5);
+    opacity: 0;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.heart-item {
+    width: 50px;
+    height: 50px;
+    object-fit: contain;
+}
+
+#draggable-heart-2.revealed {
+    opacity: 1;
+    pointer-events: all;
+    transform: translate(-50%, -50%) scale(1);
+    z-index: 6;
+    animation: popUp 0.6s ease-out;
+}
