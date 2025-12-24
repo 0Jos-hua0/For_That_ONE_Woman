@@ -136,14 +136,12 @@ document.addEventListener('DOMContentLoaded', () => {
     envelope.classList.add('open');
     envelope.classList.remove('close');
 
-    // Allow user to click the letter to proceed after reading
+    // Allow user to read the letter indefinitely
     const letter = document.querySelector('.letter');
     if (letter) {
-      letter.style.cursor = 'pointer';
-      letter.title = "Click to continue";
-      letter.onclick = () => {
-        window.location.href = 'index.html';
-      };
+      letter.style.cursor = 'default';
+      letter.title = "";
+      letter.onclick = null;
     }
   }
 
