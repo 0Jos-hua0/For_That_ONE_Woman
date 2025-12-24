@@ -423,7 +423,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 setTimeout(() => overlay.classList.add('active'), 100);
 
                 setTimeout(() => {
-                    window.location.href = 'index.html';
+                    window.location.href = 'end.html';
                 }, 2000);
             }
         }, 1000);

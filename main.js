@@ -142,7 +142,7 @@ document.addEventListener('DOMContentLoaded', () => {
       letter.style.cursor = 'pointer';
       letter.title = "Click to continue";
       letter.onclick = () => {
-        window.location.href = 'start.html';
+        window.location.href = 'index.html';
       };
     }
   }
